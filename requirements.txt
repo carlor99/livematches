@@ -1,0 +1,3 @@
+Flask>=2.2.2
+pyqt5<5.13
+pyqtwebengine<5.13

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Matches</title>
+    
+</head>
+<body>
+    <h2>Live Matches</h2>
+    <div class="container">
+        <ul id="matchlist">
+            {% for match in matchlist: %}
+                <li>{{match.time}}: {{match.hometeam}} {{match.homescore}} - {{match.awayscore}} {{match.awayteam}}</li>
+            {% endfor %}
+        </ul>
+        <!-- Filter Button -->
+        <form action="{{ url_for('filter_00') }}" method="post">
+            <button type="submit">Filter 0-0</button>
+        </form>
+
+        <!-- Filter Button -->
+        <form action="{{ url_for('filter_00_plus70') }}" method="post">
+            <button type="submit">Filter 0-0 + 70'</button>
+        </form>
+
+        <!-- Filter Button -->
+        <form action="{{ url_for('clear_filter') }}" method="post">
+            <button type="submit">Clear Filters</button>
+        </form>
+    </div>
+
+
+        
+</body>
+</html>
