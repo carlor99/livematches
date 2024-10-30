@@ -2,3 +2,8 @@ Flask>=2.2.2
 pyqt5<5.13
 pyqtwebengine<5.13
 selenium
+webdriver_manager
+flask-restful
+packaging
+gunicorn
+requests
