@@ -51,9 +51,8 @@ def start_browser():
                                         
         )
     driver.find_element(By.CSS_SELECTOR, 'button#onetrust-accept-btn-handler').click()
-    time.sleep(1)
-    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-    time.sleep(2)
+
+
 def find_match(match_element):
     global available_matches
     WebDriverWait(match_element, 120).until(
@@ -64,12 +63,12 @@ def find_match(match_element):
     match_time = validate_time(match_time_text)
     """if match_time_text:
     match_time = 0"""
-    if match_time < 90:
+    if match_time < 999:
             
         WebDriverWait(match_element, 120).until(
         EC.visibility_of_element_located((By.XPATH,
                                     './/div[contains(@id, "__match-row__live__home-team-score")]'))
-        )  #//span[contains(@id, "__match-row__live__home-team-score")]
+        ) 
         match_homescore = match_element.find_element(By.XPATH, './/div[contains(@id, "__match-row__live__home-team-score")]').text
         WebDriverWait(match_element, 120).until(
             EC.visibility_of_element_located((By.XPATH,
@@ -105,15 +104,15 @@ def return_matchlist():
 # Function to scroll and fetch new elements
 def scroll_and_fetch_elements():
     global driver
+    match_elements_list = []
     last_height = driver.execute_script("return document.body.scrollHeight")  # Get initial height
     current_elements = driver.find_elements(By.XPATH, './/div[contains(@id, "__category-header")]/following-sibling::div[contains(@id, "__match-row")]')
-
-    for match_element in current_elements:      
-        find_match(match_element)    
+    match_elements_list.extend(match_element for match_element in current_elements if match_element not in match_elements_list)
+       
     while True:
         # Scroll down to the bottom
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(2)  # Pause to allow content to load
+        driver.execute_script("window.scrollTo(0, 200);")
+        time.sleep(1)  # Pause to allow content to load
 
         # Get the new height and check for new elements
         new_height = driver.execute_script("return document.body.scrollHeight")
@@ -121,8 +120,7 @@ def scroll_and_fetch_elements():
         # Find elements (replace with your actual element selector)
         new_elements = driver.find_elements(By.XPATH, './/div[contains(@id, "__category-header")]/following-sibling::div[contains(@id, "__match-row")]')
 
-        for match_element in new_elements:      
-            find_match(match_element)   
+        match_elements_list.extend(match_element for match_element in new_elements if match_element not in match_elements_list)  
 
         # If the height has not changed, break the loop
         if new_height == last_height:
@@ -131,7 +129,7 @@ def scroll_and_fetch_elements():
 
         last_height = new_height  # Update last height for the next iteration
 
-    return current_elements  # Return the set of collected elements
+    return match_elements_list  # Return the set of collected elements
 
 
 try:       
@@ -139,6 +137,9 @@ try:
 
     # Call the function
     match_elements = scroll_and_fetch_elements()
+
+    for match_element in match_elements:      
+        find_match(match_element) 
 
     
             
